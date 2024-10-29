@@ -7,7 +7,7 @@ import img from "../assets/profilePic.png";
 const LandingPage = () => {
   const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(0);
-  const sections = [0, 1, 2, 3, 4]; // Define sections by their index
+  const sections = [0, 1, 2, 3]; // Adjusted sections to exclude About section
   const [isScrolling, setIsScrolling] = useState(false); // Track scrolling state
 
   const handleScroll = (e) => {
@@ -27,8 +27,12 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
+    // Prevent scrollbar from appearing
+    document.body.style.overflow = "hidden";
     window.addEventListener("wheel", handleScroll, { passive: false });
+
     return () => {
+      document.body.style.overflow = "auto"; // Reset overflow on unmount
       window.removeEventListener("wheel", handleScroll);
     };
   }, [currentSection, isScrolling]);
@@ -57,7 +61,7 @@ const LandingPage = () => {
                   className="w-10/12 top-[2rem] sm:top-0 left-0"
                 />
               </div>
-              <div className="flex flex-col justify-center w-full text-center lg:w-7/12 lg:text-left">
+              <div className="flex flex-col items-center lg:items-start justify-center w-full text-center lg:w-7/12 lg:text-left">
                 <h2 className="mb-4 text-4xl font-bold md:text-5xl lg:text-6xl">
                   Jay Rupapara: <br />Frontend Developer
                 </h2>
@@ -65,37 +69,21 @@ const LandingPage = () => {
                   Currently pursuing 3rd year B.Tech in Computer Engineering with a
                   passion for crafting responsive and optimized user interfaces.
                 </p>
+                <a
+                  href="YOUR_GOOGLE_DRIVE_LINK_HERE"  // Replace with your Google Drive link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 text-white bg-black rounded-2xl hover:bg-gray-800"
+                >
+                  Download CV
+                </a>
               </div>
             </section>
           </motion.section>
         )}
 
-        {/* About Section */}
-        {currentSection === 1 && (
-          <motion.section
-            key="about-section"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -100 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center justify-center h-screen text-white bg-black"
-          >
-            <section className="max-w-4xl px-6 mx-auto text-center">
-              <h3 className="mb-4 text-3xl font-bold md:text-4xl">About Me</h3>
-              <p className="mb-6 text-lg leading-relaxed md:text-xl">
-                I am a frontend developer specializing in React.js and TailwindCSS,
-                with experience working in team environments for projects like SGP
-                and Smart India Hackathon.
-              </p>
-              <p className="mb-6 text-lg leading-relaxed md:text-xl">
-                Powered by AI, perfected by me.
-              </p>
-            </section>
-          </motion.section>
-        )}
-
         {/* Skills & Knowledge Section */}
-        {currentSection === 2 && (
+        {currentSection === 1 && (
           <motion.section
             key="skills-section"
             initial={{ opacity: 0, y: 100 }}
@@ -127,7 +115,7 @@ const LandingPage = () => {
         )}
 
         {/* Projects Section */}
-        {currentSection === 3 && (
+        {currentSection === 2 && (
           <motion.section
             key="projects-section"
             initial={{ opacity: 0, y: 100 }}
@@ -153,7 +141,7 @@ const LandingPage = () => {
         )}
 
         {/* Contact Section */}
-        {currentSection === 4 && (
+        {currentSection === 3 && (
           <motion.section
             key="contact-section"
             initial={{ opacity: 0, y: 100 }}
@@ -179,7 +167,7 @@ const LandingPage = () => {
         )}
       </AnimatePresence>
       
-      {currentSection === 4 && (
+      {currentSection === 3 && (
         <footer className="py-10 text-white bg-black">
           <div className="text-center">
             <p>&copy; {new Date().getFullYear()} Jay Rupapara. All Rights Reserved.</p>
@@ -191,4 +179,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-

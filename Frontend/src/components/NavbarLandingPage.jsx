@@ -21,16 +21,16 @@ function Navbar() {
           Home
         </a>
         <a
+          href="#about"
+          className="px-4 py-2 font-medium text-white transition duration-300 rounded-xl hover:text-gray-500"
+        >
+          Skills
+        </a>
+        <a
           href="#projects"
           className="px-4 py-2 font-medium text-white transition duration-300 rounded-xl hover:text-gray-500"
         >
           Projects
-        </a>
-        <a
-          href="#about"
-          className="px-4 py-2 font-medium text-white transition duration-300 rounded-xl hover:text-gray-500"
-        >
-          About
         </a>
         <a
           href="#contact"
