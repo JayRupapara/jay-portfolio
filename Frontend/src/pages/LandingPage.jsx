@@ -14,7 +14,6 @@ const LandingPage = () => {
   const sections = [0, 1, 2, 3];
   const [isScrolling, setIsScrolling] = useState(false);
 
-
   const projects = [
     {
       id: 1,
@@ -43,38 +42,55 @@ const LandingPage = () => {
     const handleScroll = (e) => {
       e.preventDefault();
       if (isScrolling) return;
-  
+
       if (e.deltaY > 0 && currentSection < sections.length - 1) {
         setCurrentSection((prev) => prev + 1);
       } else if (e.deltaY < 0 && currentSection > 0) {
         setCurrentSection((prev) => prev - 1);
       }
-  
+
       setIsScrolling(true);
       setTimeout(() => setIsScrolling(false), 700);
     };
-  
+
     document.body.style.overflow = "hidden";
     window.addEventListener("wheel", handleScroll, { passive: false });
-  
+
     return () => {
       document.body.style.overflow = "auto";
       window.removeEventListener("wheel", handleScroll);
     };
   }, [currentSection, isScrolling, sections.length]);
-  
+
   const scrollToSection = (section) => {
-    scroller.scrollTo(section, {
-      duration: 800,
-      delay: 0,
-      smooth: "easeInOutQuart",
-    });
+    switch (section) {
+      case "contact":
+        setCurrentSection(3);
+        break;
+      case "projects":
+        setCurrentSection(2);
+        break;
+      case "skills":
+        setCurrentSection(1);
+        break;
+      case "home":
+        setCurrentSection(0);
+        break;
+      default:
+        setCurrentSection(0);
+        break;
+    }
+    // scroller.scrollTo(section, {
+    //   duration: 800,
+    //   delay: 0,
+    //   smooth: "easeInOutQuart",
+    // });
   };
 
   return (
     <div className="flex flex-col w-full justify-center h-screen bg-white">
       <div className="absolute w-full top-6 md:top-10 z-10">
-        <Navbar onSectionClick={scrollToSection} />
+        <Navbar scrollToSection={scrollToSection} />
       </div>
       <AnimatePresence>
         {/* Hero Section */}
@@ -136,12 +152,42 @@ const LandingPage = () => {
                   Skills & Knowledge
                 </h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-                  <SkillCard icon={<FaHtml5 />} color="text-orange-500" title="HTML" description="Structuring web content with semantic elements." />
-                  <SkillCard icon={<FaCss3Alt />} color="text-blue-500" title="CSS" description="Styling web pages with layouts and animations." />
-                  <SkillCard icon={<FaJs />} color="text-yellow-400" title="JavaScript (ES6+)" description="Strong JS fundamentals and modern practices." />
-                  <SkillCard icon={<FaReact />} color="text-blue-500" title="React.js" description="Creating dynamic and reactive web apps." />
-                  <SkillCard icon={<SiTailwindcss />} color="text-teal-400" title="TailwindCSS" description="Building fast, responsive UI components." />
-                  <SkillCard icon={<SiFramer />} color="text-pink-500" title="Framer Motion" description="Creating smooth animations and transitions." />
+                  <SkillCard
+                    icon={<FaHtml5 />}
+                    color="text-orange-500"
+                    title="HTML"
+                    description="Structuring web content with semantic elements."
+                  />
+                  <SkillCard
+                    icon={<FaCss3Alt />}
+                    color="text-blue-500"
+                    title="CSS"
+                    description="Styling web pages with layouts and animations."
+                  />
+                  <SkillCard
+                    icon={<FaJs />}
+                    color="text-yellow-400"
+                    title="JavaScript (ES6+)"
+                    description="Strong JS fundamentals and modern practices."
+                  />
+                  <SkillCard
+                    icon={<FaReact />}
+                    color="text-blue-500"
+                    title="React.js"
+                    description="Creating dynamic and reactive web apps."
+                  />
+                  <SkillCard
+                    icon={<SiTailwindcss />}
+                    color="text-teal-400"
+                    title="TailwindCSS"
+                    description="Building fast, responsive UI components."
+                  />
+                  <SkillCard
+                    icon={<SiFramer />}
+                    color="text-pink-500"
+                    title="Framer Motion"
+                    description="Creating smooth animations and transitions."
+                  />
                 </div>
               </section>
             </motion.section>
@@ -152,7 +198,7 @@ const LandingPage = () => {
           {/* Projects Section */}
           {currentSection === 2 && (
             <motion.section
-              key="projects-section"
+              key="projects"
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -100 }}
@@ -170,7 +216,7 @@ const LandingPage = () => {
           {/* Contact Section */}
           {currentSection === 3 && (
             <motion.section
-              key="contact-section"
+              key="contact"
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -100 }}
@@ -183,9 +229,7 @@ const LandingPage = () => {
         </Element>
       </AnimatePresence>
 
-      {currentSection === 3 && (
-        <Footer />
-      )}
+      {currentSection === 3 && <Footer />}
     </div>
   );
 };
@@ -196,9 +240,7 @@ const SkillCard = ({ icon, color, title, description }) => (
     whileHover={{ scale: 1.05 }}
     className="p-6 bg-white text-black border shadow-md rounded-xl hover:shadow-lg"
   >
-    <div className={`flex justify-center mb-4 text-5xl ${color}`}>
-      {icon}
-    </div>
+    <div className={`flex justify-center mb-4 text-5xl ${color}`}>{icon}</div>
     <h4 className="mb-2 text-2xl font-semibold">{title}</h4>
     <p>{description}</p>
   </motion.div>
@@ -214,7 +256,10 @@ SkillCard.propTypes = {
 const ProjectList = ({ projects }) => (
   <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
     {projects.map((project) => (
-      <div key={project.id} className="p-4 bg-black text-white rounded-xl shadow-lg">
+      <div
+        key={project.id}
+        className="p-4 bg-black text-white rounded-xl shadow-lg"
+      >
         <img
           src={project.previewImage}
           alt={`${project.title} preview`}
@@ -250,7 +295,9 @@ ProjectList.propTypes = {
 const ContactSection = ({ navigate }) => (
   <div className="text-center">
     <h3 className="mb-4 text-3xl font-bold">Contact Me</h3>
-    <p className="mb-8 text-lg">Get in touch to discuss potential collaborations.</p>
+    <p className="mb-8 text-lg">
+      Get in touch to discuss potential collaborations.
+    </p>
     <button
       onClick={() => navigate("/contact")}
       className="px-4 py-2 text-black bg-white rounded-xl hover:bg-gray-300"
