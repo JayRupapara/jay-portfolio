@@ -3,10 +3,11 @@ import PropTypes from "prop-types"; // Import PropTypes for prop validation
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavbarLandingPage";
-import img from "../assets/profilePic.png";
+import profilePic from "../assets/profilePic.png";
+import project1 from "../assets/p1.png";
 import { FaReact, FaCss3Alt, FaHtml5, FaJs } from "react-icons/fa";
 import { SiTailwindcss, SiFramer } from "react-icons/si";
-import { Element, scroller } from "react-scroll"; // Import scroller from react-scroll
+import { Element } from "react-scroll"; // Keep scroller if needed for future
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -17,10 +18,10 @@ const LandingPage = () => {
   const projects = [
     {
       id: 1,
-      title: "Project Title 1",
+      title: "NGO Medicine Donation",
       description: "A brief description of Project 1.",
-      previewImage: "link_to_preview_image_1",
-      liveLink: "https://project1.com",
+      previewImage: project1,
+      liveLink: "https://ngomedicine.netlify.app/",
     },
     {
       id: 2,
@@ -39,6 +40,7 @@ const LandingPage = () => {
   ];
 
   useEffect(() => {
+    // Handle scroll for mouse wheel
     const handleScroll = (e) => {
       e.preventDefault();
       if (isScrolling) return;
@@ -53,12 +55,28 @@ const LandingPage = () => {
       setTimeout(() => setIsScrolling(false), 700);
     };
 
-    document.body.style.overflow = "hidden";
+    // Handle keyboard navigation with ArrowUp and ArrowDown
+    const handleKeydown = (e) => {
+      if (isScrolling) return;
+
+      if (e.key === "ArrowDown" && currentSection < sections.length - 1) {
+        setCurrentSection((prev) => prev + 1);
+      } else if (e.key === "ArrowUp" && currentSection > 0) {
+        setCurrentSection((prev) => prev - 1);
+      }
+
+      setIsScrolling(true);
+      setTimeout(() => setIsScrolling(false), 700);
+    };
+
+    document.body.style.overflow = "hidden"; // Disable default scrolling
     window.addEventListener("wheel", handleScroll, { passive: false });
+    window.addEventListener("keydown", handleKeydown);
 
     return () => {
       document.body.style.overflow = "auto";
       window.removeEventListener("wheel", handleScroll);
+      window.removeEventListener("keydown", handleKeydown);
     };
   }, [currentSection, isScrolling, sections.length]);
 
@@ -80,11 +98,6 @@ const LandingPage = () => {
         setCurrentSection(0);
         break;
     }
-    // scroller.scrollTo(section, {
-    //   duration: 800,
-    //   delay: 0,
-    //   smooth: "easeInOutQuart",
-    // });
   };
 
   return (
@@ -107,7 +120,7 @@ const LandingPage = () => {
               <section className="flex flex-col w-full lg:w-5/6 mx-auto mt-[5rem] md:mt-[6rem] lg:mt-20 lg:flex-row">
                 <div className="relative flex flex-col items-center w-full lg:w-5/12">
                   <img
-                    src={img}
+                    src={profilePic}
                     alt="Professional Work"
                     className="w-8/12 md:w-5/12 lg:w-11/12 lg:top-[2rem] left-0"
                   />
@@ -202,7 +215,7 @@ const LandingPage = () => {
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5 }}
               className="flex items-center justify-center h-screen text-black bg-white"
             >
               <section className="max-w-6xl px-6 mx-auto text-center">
@@ -213,23 +226,46 @@ const LandingPage = () => {
         </Element>
 
         <Element name="contact">
-          {/* Contact Section */}
-          {currentSection === 3 && (
-            <motion.section
-              key="contact"
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 0.6 }}
-              className="flex items-center justify-center h-screen text-white bg-black"
-            >
-              <ContactSection navigate={navigate} />
-            </motion.section>
-          )}
-        </Element>
-      </AnimatePresence>
+  {/* Contact Section */}
+  {currentSection === 3 && (
+    <motion.section
+      key="contact"
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -100 }}
+      transition={{ duration: 0.5 }}
+      className="relative flex flex-col items-center justify-center h-screen text-white bg-black"
+    >
+      {/* Centered Contact Box */}
+      <div className="text-center p-8 bg-black border-2 border-gray-500 rounded-lg">
+        <h3 className="mb-4 text-3xl font-bold">Contact Me</h3>
+        <p className="mb-8 text-lg">
+          Get in touch to discuss potential collaborations.
+        </p>
+        <button
+          onClick={() => navigate("/contact")}
+          className="px-4 py-2 text-black bg-white rounded-xl hover:bg-gray-300"
+        >
+          Go to Contact Page
+        </button>
+      </div>
 
-      {currentSection === 3 && <Footer />}
+      {/* Footer pinned to the bottom */}
+      <motion.footer
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="absolute bottom-0 w-full py-6 text-center bg-gray-100"
+      >
+        <p className="text-gray-600">
+          © 2024 Jay Rupapara. All rights reserved.
+        </p>
+      </motion.footer>
+    </motion.section>
+  )}
+</Element>
+
+      </AnimatePresence>
     </div>
   );
 };
@@ -258,23 +294,25 @@ const ProjectList = ({ projects }) => (
     {projects.map((project) => (
       <div
         key={project.id}
-        className="p-4 bg-black text-white rounded-xl shadow-lg"
+        className="bg-black text-white rounded-xl shadow-lg"
       >
         <img
           src={project.previewImage}
           alt={`${project.title} preview`}
-          className="w-full h-48 mb-4 rounded-xl object-cover"
+          className="w-full rounded-t-xl"
         />
+        <div className="py-4">
         <h4 className="text-xl font-semibold">{project.title}</h4>
-        <p className="mb-4">{project.description}</p>
+        <p className="mb-2 text-sm">{project.description}</p>
         <a
           href={project.liveLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block px-4 py-2 text-black bg-white rounded-xl hover:bg-gray-300"
+          className="inline-block px-3 py-1.5 text-black bg-white rounded-xl hover:bg-gray-300"
         >
           View Project
         </a>
+        </div>
       </div>
     ))}
   </div>
@@ -291,30 +329,5 @@ ProjectList.propTypes = {
     })
   ).isRequired,
 };
-
-const ContactSection = ({ navigate }) => (
-  <div className="text-center">
-    <h3 className="mb-4 text-3xl font-bold">Contact Me</h3>
-    <p className="mb-8 text-lg">
-      Get in touch to discuss potential collaborations.
-    </p>
-    <button
-      onClick={() => navigate("/contact")}
-      className="px-4 py-2 text-black bg-white rounded-xl hover:bg-gray-300"
-    >
-      Go to Contact Page
-    </button>
-  </div>
-);
-
-ContactSection.propTypes = {
-  navigate: PropTypes.func.isRequired,
-};
-
-const Footer = () => (
-  <footer className="absolute bottom-0 w-full py-6 text-center bg-gray-100">
-    <p className="text-gray-600">© 2024 Jay Rupapara. All rights reserved.</p>
-  </footer>
-);
 
 export default LandingPage;
