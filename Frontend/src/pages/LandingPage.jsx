@@ -226,46 +226,66 @@ const LandingPage = () => {
         </Element>
 
         <Element name="contact">
-  {/* Contact Section */}
-  {currentSection === 3 && (
-    <motion.section
-      key="contact"
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -100 }}
-      transition={{ duration: 0.5 }}
-      className="relative flex flex-col items-center justify-center h-screen text-white bg-black"
-    >
-      {/* Centered Contact Box */}
-      <div className="text-center p-8 bg-black border-2 border-gray-500 rounded-lg">
-        <h3 className="mb-4 text-3xl font-bold">Contact Me</h3>
-        <p className="mb-8 text-lg">
-          Get in touch to discuss potential collaborations.
-        </p>
+          {/* Contact Section */}
+          {currentSection === 3 && (
+            <motion.section
+              key="contact"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -100 }}
+              transition={{ duration: 0.5 }}
+              className="relative flex flex-col items-center justify-center h-screen text-white bg-black"
+            >
+              {/* Centered Contact Box */}
+              <div className="text-center p-8 bg-black border-2 border-gray-500 rounded-lg">
+                <h3 className="mb-4 text-3xl font-bold">Contact Me</h3>
+                <p className="mb-8 text-lg">
+                  Get in touch to discuss potential collaborations.
+                </p>
+                <button
+                  onClick={() => navigate("/contact")}
+                  className="px-4 py-2 text-black bg-white rounded-xl hover:bg-gray-300"
+                >
+                  Go to Contact Page
+                </button>
+              </div>
+
+              {/* Footer pinned to the bottom */}
+              <motion.footer
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute bottom-0 w-full py-6 text-center bg-gray-100"
+              >
+                <p className="text-gray-600">
+                  © 2024 Jay Rupapara. All rights reserved.
+                </p>
+              </motion.footer>
+            </motion.section>
+          )}
+        </Element>
+      </AnimatePresence>
+      {/* Up and Down Navigation Buttons */}
+      <div className="hidden fixed bottom-5 right-5 sm:flex flex-col gap-4">
         <button
-          onClick={() => navigate("/contact")}
-          className="px-4 py-2 text-black bg-white rounded-xl hover:bg-gray-300"
+          onClick={() => currentSection > 0 && setCurrentSection((prev) => prev - 1)}
+          disabled={currentSection === 0}
+          className={`px-4 py-2 bg-black text-white rounded-lg ${
+            currentSection === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
+          }`}
         >
-          Go to Contact Page
+          Up
+        </button>
+        <button
+          onClick={() => currentSection < sections.length - 1 && setCurrentSection((prev) => prev + 1)}
+          disabled={currentSection === sections.length - 1}
+          className={`px-4 py-2 bg-black text-white rounded-lg ${
+            currentSection === sections.length - 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
+          }`}
+        >
+          Down
         </button>
       </div>
-
-      {/* Footer pinned to the bottom */}
-      <motion.footer
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="absolute bottom-0 w-full py-6 text-center bg-gray-100"
-      >
-        <p className="text-gray-600">
-          © 2024 Jay Rupapara. All rights reserved.
-        </p>
-      </motion.footer>
-    </motion.section>
-  )}
-</Element>
-
-      </AnimatePresence>
     </div>
   );
 };
@@ -302,16 +322,16 @@ const ProjectList = ({ projects }) => (
           className="w-full rounded-t-xl"
         />
         <div className="py-4">
-        <h4 className="text-xl font-semibold">{project.title}</h4>
-        <p className="mb-2 text-sm">{project.description}</p>
-        <a
-          href={project.liveLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block px-3 py-1.5 text-black bg-white rounded-xl hover:bg-gray-300"
-        >
-          View Project
-        </a>
+          <h4 className="text-xl font-semibold">{project.title}</h4>
+          <p className="mb-2 text-sm">{project.description}</p>
+          <a
+            href={project.liveLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-3 py-1.5 text-black bg-white rounded-xl hover:bg-gray-300"
+          >
+            View Project
+          </a>
         </div>
       </div>
     ))}
